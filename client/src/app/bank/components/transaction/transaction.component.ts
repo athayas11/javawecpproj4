@@ -31,11 +31,30 @@ export class TransactionComponent implements OnInit {
       amount: ["", ""],
       type: ["", ""],
     });
- 
+    this.users$ = this.authService
+      .getUsers()
+      .pipe(map((users) => users.filter((u) => u.role === "CUSTOMER")));
   }
 
   onSubmit() {
     this.isFormSubmitted = true;
-    //@todo:  when a trasaction is submitted make sure relevant fields are not empty, and make an api call to perform transaction
+    if (this.transactionForm.invalid) {
+      return;
+    } else {
+      const { user, amount, type } = this.transactionForm.value;
+      const transaction: Transaction = {
+        userId: user,
+        transactionAmount: amount,
+        transactionType: type,
+      };
+      this.trnasactionService.performTransaction(transaction).subscribe(
+        (res: any) => {
+          this.transactionSuccess$ = of(res.success);
+        },
+        (error) => {
+          this.transactionError$ = of("Error in performing transaction");
+        }
+      );
+    }
   }
 }

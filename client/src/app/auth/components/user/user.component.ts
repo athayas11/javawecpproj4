@@ -29,6 +29,24 @@ export class UserComponent implements OnInit {
   }
 
   onSubmit() {
-     //@todo:  when form is submitted make sure relevant fields are not empty, and make an api call to create user
+    this.isFormSubmitted = true;
+    if (this.userForm.invalid) {
+      return;
+    } else {
+      const { userId, password, role } = this.userForm.value;
+      const user: User = {
+        userId,
+        password,
+        role,
+      };
+      this.authServie.createUser(user).subscribe(
+        (res: any) => {
+          this.userSuccess$ = of(res.success);
+        },
+        (error) => {
+          this.userError$ = of("Unable to create user");
+        }
+      );
+    }
   }
 }

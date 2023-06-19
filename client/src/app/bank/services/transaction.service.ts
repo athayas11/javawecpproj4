@@ -13,6 +13,9 @@ export class TransactionService {
   constructor(private http: HttpClient) {}
 
   performTransaction(transaction: Transaction): Observable<Transaction> {
-    // @todo : should make an API call to perform transaction
+    return this.http.post<Transaction>(
+      `${this.baseUrl}/transaction`,
+      transaction
+    );
   }
 }

@@ -13,7 +13,10 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(user: User): Observable<{ [key: string]: string }> {
-    // @todo : Api call to /authenticate
+    return this.http.post<{ token: string }>(
+      `${this.loginUrl}/authenticate`,
+      user
+    );
   }
 
   getToken() {
@@ -25,6 +28,6 @@ export class AuthService {
   }
 
   createUser(user: User): Observable<User> {
-    // @todo : should create a user in the system
+    return this.http.post<User>(`${this.loginUrl}/user`, user);
   }
 }
